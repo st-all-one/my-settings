@@ -1,0 +1,71 @@
+# =============================================================================
+# Comportamento
+# =============================================================================
+[pack]
+	threads = 0
+
+[core]
+    editor = nano
+    autocrlf = input
+    ignorecase = false
+
+    fsmonitor = true
+    compression = 1
+    preloadIndex = true
+    commitGraph = true
+
+    pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+
+[delta]
+    navigate = true
+    line-numbers = true
+    side-by-side = true
+
+[init]
+    defaultBranch = main
+
+[column]
+    ui = auto
+
+[http]
+	postBuffer = 524288000
+
+[branch]
+    sort = -committerdate
+
+# =============================================================================
+# Sincronização
+# =============================================================================
+[pull]
+    # Faz rebase por padrão ao invés de merge. Mantém o histórico 100% linear.
+    # rebase = true
+
+[push]
+    default = current
+    autoSetupRemote = true
+    followTags = true
+
+[fetch]
+    prune = true
+    parallel = 0
+    writeCommitGraph = true
+
+[merge]
+    # O padrão 'merge' mostra apenas a sua versão e a remota.
+    # O 'zdiff3' mostra a base comum entre elas, facilitando MUITO entender o conflito.
+    conflictstyle = zdiff3
+
+[rebase]
+    autosquash = true
+    autostash = true
+    updateRefs = true
+
+[diff]
+    algorithm = histogram
+    renames = true
+
+[maintenance]
+    auto = true
