@@ -142,10 +142,7 @@ gpush() {
 # --- 6. Integração do FZF ---
 # Acelera a busca de arquivos e histórico
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
-if [[ -f /usr/share/fzf/shell/key-bindings.zsh ]]; then
-    source /usr/share/fzf/shell/key-bindings.zsh
-    source /usr/share/fzf/shell/completion.zsh
-fi
+[[ -f /usr/share/fzf/shell/key-bindings.zsh ]] && source /usr/share/fzf/shell/key-bindings.zsh
 
 # --- 7. Fast Syntax Highlighting & Autosuggestions ---
 ZSH_AUTOSUGGEST_USE_ASYNC=1
