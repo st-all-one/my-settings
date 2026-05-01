@@ -52,6 +52,14 @@ setopt SHARE_HISTORY             # Compartilha o histórico entre abas ativas
 setopt APPEND_HISTORY
 setopt INC_APPEND_HISTORY
 
+# GIT
+export GIT_INDEX_VERSION=4
+export GIT_OPTIONAL_LOCKS=0
+export GIT_PAGER="delta"
+export GIT_EDITOR="nano"
+export GIT_TRACE_PERFORMANCE=1
+export GIT_TRACE_SETUP=1
+
 # Carrega o tema
 source ~/.zsh-theme
 

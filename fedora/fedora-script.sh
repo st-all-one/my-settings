@@ -102,6 +102,11 @@ echo "== Limpeza pós-install =="
 sudo dnf autoremove -y
 sudo dnf clean all -y
 
+echo "== Configurações =="
+curl -fLo ~/.gitconfig https://raw.githubusercontent.com/st-all-one/my-settings/main/fedora/.gitconfig
+curl -fLo ~/.zshrc https://raw.githubusercontent.com/st-all-one/my-settings/main/fedora/.zshrc
+curl -fLo ~/.zsh-theme https://raw.githubusercontent.com/st-all-one/my-settings/main/fedora/.zsh-theme
+
 echo "== Instalações manuais =="
 echo ""
 echo "curl -fsSL https://deno.land/install.sh | sh"
