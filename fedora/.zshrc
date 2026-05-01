@@ -60,6 +60,10 @@ export GIT_EDITOR="nano"
 export GIT_TRACE_PERFORMANCE=1
 export GIT_TRACE_SETUP=1
 
+# Docker
+export DOCKER_BUILDKIT=1
+export COMPOSE_DOCKER_CLI_BUILD=1
+
 # Carrega o tema
 source ~/.zsh-theme
 

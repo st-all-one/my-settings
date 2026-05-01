@@ -98,14 +98,48 @@ sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 sudo systemctl enable --now docker
 
+# NodeJS
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+\. "$HOME/.nvm/nvm.sh"
+nvm install 25
+
+# Google Gemini
+npm install --no-audit -g @google/gemini-cli
+
 echo "== Limpeza pós-install =="
 sudo dnf autoremove -y
 sudo dnf clean all -y
+
+echo "== Otimizando Docker para Btrfs e Durabilidade do SSD =="
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json << EOF
+{
+  "storage-driver": "btrfs",
+  "features": {
+    "buildkit": true
+  },
+  "log-driver": "local",
+  "log-opts": {
+    "max-size": "10m",
+    "compress": "true"
+  }
+}
+EOF
+sudo systemctl restart docker
 
 echo "== Configurações =="
 curl -fLo ~/.gitconfig https://raw.githubusercontent.com/st-all-one/my-settings/main/fedora/.gitconfig
 curl -fLo ~/.zshrc https://raw.githubusercontent.com/st-all-one/my-settings/main/fedora/.zshrc
 curl -fLo ~/.zsh-theme https://raw.githubusercontent.com/st-all-one/my-settings/main/fedora/.zsh-theme
+
+# Instalando fonte Lilex Nerd Font
+mkdir -p ~/.local/share/fonts/lilex && \
+curl -L https://github.com/ryanoasis/nerd-fonts/releases/download/v3.4.0/Lilex.zip -o /tmp/lilex.zip && \
+unzip -o /tmp/lilex.zip -d ~/.local/share/fonts/lilex && \
+fc-cache -f && \
+gsettings set org.gnome.Ptyxis font-name 'Lilex Nerd Font 11' && \
+gsettings set org.gnome.Ptyxis use-system-font false && \
+rm /tmp/lilex.zip
 
 echo "== Instalações manuais =="
 echo ""
