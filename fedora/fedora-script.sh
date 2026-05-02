@@ -107,7 +107,7 @@ sudo systemctl start /dev/zram0
 
 echo "== Instalações diversas =="
 sudo dnf install -y zsh zsh-autosuggestions zsh-syntax-highlighting \
-eza obs-studio chromium git-delta trash-cli fzf bat fd-find tldr
+eza obs-studio chromium zoxide git-delta difftastic trash-cli fzf bat fd-find tldr
 
 flatpak install flathub org.gimp.GIMP \
 com.dec05eba.gpu_screen_recorder \

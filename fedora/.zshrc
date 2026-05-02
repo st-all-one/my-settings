@@ -87,7 +87,20 @@ else
     alias ls='ls --color=auto'
 fi
 
+if (( $+commands[z] )); then
+    alias cd='z'
+else
+    alias cd='cd'
+fi
+
+if (( $+commands[difft] )); then
+    alias diff='difft --color always --background dark --display side-by-side'
+else
+    alias diff='diff --color=auto --unified'
+fi
+
 # Aliases de Segurança e Qualidade de Vida
+alias c='clear -x'
 alias cp='cp -iv'
 alias mv='mv -iv'
 alias df='df -h'
@@ -161,6 +174,9 @@ typeset -A ZSH_HIGHLIGHT_STYLES
 ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan,bold'
 ZSH_HIGHLIGHT_STYLES[command]='fg=green,bold'
 ZSH_HIGHLIGHT_STYLES[error]='fg=red,bold,underline'
+
+# Ativando 'z'
+eval "$(zoxide init zsh)"
 
 # Carregamento nativo do Fedora (assumindo pacotes dnf instalados)
 if [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
