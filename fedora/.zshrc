@@ -178,7 +178,18 @@ ZSH_HIGHLIGHT_STYLES[error]='fg=red,bold,underline'
 # Ativando 'z'
 eval "$(zoxide init zsh)"
 
+# Ativando 'starship'
+eval "$(starship init zsh)"
+
 # Carregamento nativo do Fedora (assumindo pacotes dnf instalados)
+enable_transient_prompt() {
+  function starship_zle-keymap-select() {
+    zle .starship_zle-keymap-select
+    _starship_transient_prompt
+  }
+  zle -N starship_zle-keymap-select
+}
+
 if [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 fi

@@ -162,6 +162,7 @@ echo "== Configurações =="
 curl -fLo ~/.gitconfig https://raw.githubusercontent.com/st-all-one/my-settings/main/fedora/.gitconfig
 curl -fLo ~/.zshrc https://raw.githubusercontent.com/st-all-one/my-settings/main/fedora/.zshrc
 curl -fLo ~/.zsh-theme https://raw.githubusercontent.com/st-all-one/my-settings/main/fedora/.zsh-theme
+mkdir -p ~/.config && curl -fLo ~/.config/starship.toml https://raw.githubusercontent.com/st-all-one/my-settings/main/fedora/starship.toml
 
 # Instalando fonte Lilex Nerd Font
 mkdir -p ~/.local/share/fonts/lilex && \
