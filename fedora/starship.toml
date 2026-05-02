@@ -1,36 +1,58 @@
-# Não pula linha ao abrir o terminal
+# -----------------------------------------------------------------------------
+# Lógica de Tema do Starship
+# Foco: Caminhos Relativos ao Repositório e Latência ~0ms
+# -----------------------------------------------------------------------------
+
 add_newline = false
 
+# Estrutura exata do seu prompt
 format = """$git_branch$git_status$directory$character"""
-
-[directory]
-# Mostra o caminho relativo ao repositório ou home
-truncation_length = 3
-truncation_symbol = "…/"
-style = "bold blue"
-format = " [$path]($style) "
 
 [git_branch]
 symbol = ""
-style = "bold yellow"
-format = "($style$branch$symbol)"
+style = "yellow"
+format = "([$branch]($style))"
 
 [git_status]
-style = "bold yellow"
-# Substituímos os ícones pesados por símbolos simples
-conflicted = "="
-ahead = "⇡"
-behind = "⇣"
-diverged = "⇕"
-up_to_date = ""
-untracked = "*"
-stashed = "$"
+style = "yellow"
+# Adiciona os indicadores logo após a branch. Resultado visual: (main)*
+format = "[$all_status]($style)"
 modified = "*"
+untracked = "*"
 staged = "+"
-renamed = "»"
-deleted = "✘"
-format = "$all_status$dots"
+deleted = "x"
+conflicted = "="
+up_to_date = ""
+
+[directory]
+style = "blue"
+# Reproduz exatamente a sua antiga função 'project_path()'
+truncate_to_repo = true
+truncation_length = 3
+repo_root_style = "blue"
+
+# Comportamento quando está na raiz do repositório Git
+repo_root_format = " \\[[~]($repo_root_style)\\]"
+
+# Comportamento quando está em subdiretórios do repositório
+format = " \\[[~/$path]($style)\\]"
 
 [character]
-success_symbol = " [>](bold white) "
-error_symbol = " [x](bold red) "
+success_symbol = " [>](white) "
+error_symbol = " [x](red) "
+
+# --- Otimizações Extras de Performance do Starship ---
+# Desativa varredura de módulos de linguagens (Node, PHP, Rust, etc)
+# garantindo que o prompt não sofra lags por checagem de versão de projeto.
+[aws]
+disabled = true
+[docker_context]
+disabled = true
+[nodejs]
+disabled = true
+[php]
+disabled = true
+[rust]
+disabled = true
+[package]
+disabled = true

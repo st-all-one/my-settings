@@ -70,7 +70,8 @@ export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
 # Carrega o tema
-source ~/.zsh-theme
+# source ~/.zsh-theme
+# Removido para incorporar o starship
 
 # --- 4. PATH Tuning ---
 # Definido diretamente sem chamadas extras ao SO
@@ -85,12 +86,6 @@ if (( $+commands[eza] )); then
     alias tree='eza --tree --icons'
 else
     alias ls='ls --color=auto'
-fi
-
-if (( $+commands[z] )); then
-    alias cd='z'
-else
-    alias cd='cd'
 fi
 
 if (( $+commands[difft] )); then
@@ -176,7 +171,7 @@ ZSH_HIGHLIGHT_STYLES[command]='fg=green,bold'
 ZSH_HIGHLIGHT_STYLES[error]='fg=red,bold,underline'
 
 # Ativando 'z'
-eval "$(zoxide init zsh)"
+eval "$(zoxide init zsh --cmd cd)"
 
 # Ativando 'starship'
 eval "$(starship init zsh)"
@@ -189,6 +184,8 @@ enable_transient_prompt() {
   }
   zle -N starship_zle-keymap-select
 }
+
+enable_transient_prompt
 
 if [[ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]]; then
     source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
