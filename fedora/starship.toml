@@ -4,6 +4,7 @@
 # -----------------------------------------------------------------------------
 
 add_newline = false
+command_timeout = 1500
 
 # Estrutura exata do seu prompt
 format = """$git_branch$git_status$directory$character"""
@@ -26,16 +27,10 @@ up_to_date = ""
 
 [directory]
 style = "blue"
-# Reproduz exatamente a sua antiga função 'project_path()'
 truncate_to_repo = true
 truncation_length = 3
-repo_root_style = "blue"
-
-# Comportamento quando está na raiz do repositório Git
-repo_root_format = " \\[[~]($repo_root_style)\\]"
-
-# Comportamento quando está em subdiretórios do repositório
-format = " \\[[~/$path]($style)\\]"
+format = " \\[[$path]($style)\\]"
+repo_root_format = " \\[[$path]($style)\\]"
 
 [character]
 success_symbol = " [>](white) "
