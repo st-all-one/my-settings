@@ -10,7 +10,10 @@ ZLE_SPACE_SUFFIX_CHARS=$' \t\n;&|'
 skip_global_compinit=1
 
 # --- 2. Otimização do Autocomplete Nativo ---
-# Inicia o autocomplete silenciosamente e salva o cache
+# Garante que pastas de funções personalizadas (se existirem) estejam no fpath
+fpath=(~/.zsh/completions $fpath)
+
+# Inicializa o compinit com cache (essencial para o Ryzen/NVMe)
 autoload -Uz compinit
 if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
   compinit -d ~/.zcompdump
@@ -21,6 +24,8 @@ fi
 # Configurações do Autocomplete
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+zstyle ':completion:*:*:*:*:descriptions' format '%F{green}-- %d --%f'
 
 # Otimização: Não autocompletar binários que o usuário atual não tem permissão
 zstyle ':completion:*:commands' rehash 1
