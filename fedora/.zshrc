@@ -75,7 +75,7 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 
 # --- 4. PATH Tuning ---
 # Definido diretamente sem chamadas extras ao SO
-export PATH="$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.config/composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+export PATH="$HOME/.deno/bin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.config/composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 # --- 5. Aliases ---
 # Substituição moderna de ferramentas nativas
@@ -194,3 +194,5 @@ fi
 if [[ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
     source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
+
+[[ -f "$HOME/.deno/env" ]] && . "$HOME/.deno/env"
