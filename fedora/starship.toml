@@ -4,7 +4,7 @@
 # -----------------------------------------------------------------------------
 
 add_newline = false
-command_timeout = 1500
+command_timeout = 2000
 
 # Estrutura exata do seu prompt
 format = """$git_branch$git_status$directory$character"""
@@ -12,7 +12,7 @@ format = """$git_branch$git_status$directory$character"""
 [git_branch]
 symbol = ""
 style = "yellow"
-format = "([$branch]($style))"
+format = "[($branch)]($style)"
 
 [git_status]
 style = "yellow"
