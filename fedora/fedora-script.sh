@@ -16,6 +16,15 @@ fastestmirror=True
 metadata_expire=12h
 EOF
 
+echo "== Atualização de DNS =="
+sudo mkdir -p '/etc/systemd/resolved.conf.d'
+sudo tee /etc/systemd/resolved.conf.d/99-dns-over-tls.conf << EOF
+[Resolve]
+DNS=1.1.1.2#security.cloudflare-dns.com 1.0.0.2#security.cloudflare-dns.com 2606:4700:4700::1112#security.cloudflare-dns.com 2606:4700:4700::1002#security.cloudflare-dns.com
+DNSOverTLS=yes
+Domains=~.
+EOF
+
 echo "== Otimizações de performance =="
 sudo tee /etc/sysctl.d/99-performance.conf << EOF
 # Internet
@@ -46,19 +55,41 @@ EOF
 
 sudo systemctl enable --now irqbalance
 
-echo "== Adicionando RPM Fusion non-free =="
-sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-44.noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-44.noarch.rpm
+sudo systemctl disable NetworkManager-wait-online.service
+sudo systemctl disable cups.service
+sudo systemctl disable avahi-daemon.service
+sudo systemctl disable akmods.service
+
+echo "== Adicionando RPM Fusion non-free e terra =="
+sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+sudo dnf install -y --nogpgcheck --repofrompath 'terra,https://repos.fyralabs.com/terra$releasever' terra-release
 
 echo "== Atualização básica =="
+sudo dnf group upgrade core -y
+sudo dnf4 group install core -y
 sudo dnf upgrade -y
-flatpak update -y
 
 echo "== Atualização de drivers e firmware =="
-sudo fwupdmgr get-updates -y
+sudo fwupdmgr refresh --force
+sudo fwupdmgr get-devices
+sudo fwupdmgr get-updates
 sudo fwupdmgr update -y
+
+echo "== Flatpak =="
+flatpak remote-add --user --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+
+echo "== Instação de codecs =="
+sudo dnf4 group install multimedia -y
+sudo dnf swap 'ffmpeg-free' 'ffmpeg' --allowerasing -y
+sudo dnf update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
+sudo dnf group install -y sound-and-video
+sudo dnf install -y ffmpeg-libs libva libva-utils
 
 echo "== Intalação de drivers =="
 sudo dnf install -y mesa-va-drivers-freeworld
+sudo dnf install -y mesa-va-drivers-freeworld.i686
+sudo dnf install -y openh264 gstreamer1-plugin-openh264 mozilla-openh264
+sudo dnf config-manager setopt fedora-cisco-openh264.enabled=1
 
 echo "== Otimizações de zram =="
 sudo tee /etc/systemd/zram-generator.conf << EOF
