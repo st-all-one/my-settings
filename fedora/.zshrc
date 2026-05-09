@@ -78,7 +78,10 @@ export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
 # --- 4. PATH Tuning ---
-export PATH="$HOME/.npm-global/bin:$HOME/.deno/bin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.config/composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+# Adiciona o diretório base do FNM
+export FNM_PATH="$HOME/.local/share/fnm"
+export PATH="$FNM_PATH:$HOME/.npm-global/bin:$HOME/.deno/bin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.config/composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+
 # --- 5. Aliases ---
 if (( $+commands[eza] )); then
     alias ls='eza --icons --group-directories-first'
@@ -175,7 +178,7 @@ fd() {
 }
 bindkey -s '^g' 'fd\n'
 
-# --- 7. Fast Syntax Highlighting & Autosuggestions ---
+# --- 7. Fast Syntax Highlighting, Autosuggestions & Runtimes ---
 ZSH_AUTOSUGGEST_USE_ASYNC=1
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=50
@@ -187,6 +190,11 @@ typeset -A ZSH_HIGHLIGHT_STYLES
 ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan,bold'
 ZSH_HIGHLIGHT_STYLES[command]='fg=green,bold'
 ZSH_HIGHLIGHT_STYLES[error]='fg=red,bold,underline'
+
+# Runtimes via Rust
+if [ -d "$FNM_PATH" ]; then
+  eval "$(fnm env --use-on-cd --shell zsh)"
+fi
 
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(starship init zsh)"

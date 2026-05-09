@@ -130,9 +130,8 @@ sudo systemctl enable containerd.service
 sudo systemctl enable --now docker
 
 # NodeJS
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
-\. "$HOME/.nvm/nvm.sh"
-nvm install 25
+curl -fsSL https://fnm.vercel.app/install | bash
+fnm install 26
 
 # Google Gemini
 npm install --no-audit -g @google/gemini-cli
