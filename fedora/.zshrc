@@ -98,7 +98,7 @@ else
 fi
 
 if (( $+commands[bat] )); then
-    alias cat='bat --style=plain --paging=never'
+    alias cat='bat --paging=never'
     alias preview='bat'
 fi
 
