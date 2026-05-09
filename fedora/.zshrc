@@ -78,9 +78,7 @@ export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
 # --- 4. PATH Tuning ---
-# :$PATH adicionado ao final para preservar binários do sistema (ex: Node/NPM)
-export PATH="$HOME/.deno/bin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.config/composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
-
+export PATH="$HOME/.npm-global/bin:$HOME/.deno/bin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.config/composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 # --- 5. Aliases ---
 if (( $+commands[eza] )); then
     alias ls='eza --icons --group-directories-first'
