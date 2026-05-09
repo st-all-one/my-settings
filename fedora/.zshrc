@@ -38,6 +38,11 @@ export EDITOR='nano'
 export LANG=pt_BR.UTF-8
 export LC_ALL=pt_BR.UTF-8
 
+# Usar bat para colorir páginas de manual (man pages)
+if (( $+commands[bat] )); then
+    export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+fi
+
 # Histórico otimizado
 export HISTFILE=~/.zsh_history
 export HISTSIZE=50000
@@ -90,6 +95,11 @@ if (( $+commands[difft] )); then
     alias diff='difft --color always --background dark --display side-by-side'
 else
     alias diff='diff --color=auto --unified'
+fi
+
+if (( $+commands[bat] )); then
+    alias cat='bat --style=plain --paging=never'
+    alias preview='bat'
 fi
 
 alias c='clear -x'
@@ -145,7 +155,27 @@ gpush() {
 
 # --- 6. Integração do FZF ---
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
+
+if (( $+commands[bat] )); then
+    # Usa o bat para colorir o preview nativo do FZF (ex: ao apertar Ctrl+T)
+    export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+fi
+
 [[ -f /usr/share/fzf/shell/key-bindings.zsh ]] && source /usr/share/fzf/shell/key-bindings.zsh
+
+# Buscar e Abrir Arquivo Rápido (Ctrl+O)
+fo() {
+  local file
+  file=$(fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}') && ${EDITOR:-nano} "$file"
+}
+bindkey -s '^o' 'fo\n'
+
+# Busca e Navegação Rápida de Diretório (Ctrl+G)
+fd() {
+  local dir
+  dir=$(find ${1:-.} -path '*/.*' -prune -o -type d -print 2> /dev/null | fzf) && cd "$dir"
+}
+bindkey -s '^g' 'fd\n'
 
 # --- 7. Fast Syntax Highlighting & Autosuggestions ---
 ZSH_AUTOSUGGEST_USE_ASYNC=1
