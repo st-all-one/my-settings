@@ -106,7 +106,7 @@ sudo systemctl daemon-reload
 sudo systemctl start /dev/zram0
 
 echo "== Instalações diversas =="
-sudo dnf install -y zsh zsh-autosuggestions zsh-syntax-highlighting \
+sudo dnf install -y zsh rsync zsh-autosuggestions zsh-syntax-highlighting \
 eza bat obs-studio chromium zoxide git-delta difftastic trash-cli fzf bat fd-find tldr
 
 flatpak install flathub org.gimp.GIMP \

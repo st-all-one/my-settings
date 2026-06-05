@@ -70,17 +70,17 @@ export GIT_INDEX_VERSION=4
 export GIT_OPTIONAL_LOCKS=0
 export GIT_PAGER="delta"
 export GIT_EDITOR="nano"
-export GIT_TRACE_PERFORMANCE=1
-export GIT_TRACE_SETUP=1
+# export GIT_TRACE_PERFORMANCE=1
+# export GIT_TRACE_SETUP=1
 
 # Docker
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
 # --- 4. PATH Tuning ---
-# Adiciona o diretório base do FNM
+# Adiciona o diretório base do FNM e outros binários locais
 export FNM_PATH="$HOME/.local/share/fnm"
-export PATH="$FNM_PATH:$HOME/.npm-global/bin:$HOME/.deno/bin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.config/composer/vendor/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
+export PATH="$FNM_PATH:$HOME/.npm-global/bin:$HOME/.deno/bin:$HOME/.local/bin:$HOME/.cargo/bin:$HOME/.config/composer/vendor/bin:$HOME/.opencode/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:$PATH"
 
 # --- 5. Aliases ---
 if (( $+commands[eza] )); then
@@ -93,7 +93,12 @@ else
 fi
 
 if (( $+commands[difft] )); then
+    unalias aidiff 2>/dev/null
+    alias rdiff='diff --color=never --unified'
     alias diff='difft --color always --background dark --display side-by-side'
+    aidiff() {
+        difft --color never --display inline "$@"
+    }
 else
     alias diff='diff --color=auto --unified'
 fi
@@ -104,7 +109,7 @@ if (( $+commands[bat] )); then
 fi
 
 alias c='clear -x'
-alias cp='cp -iv'
+alias cp='rsync -ashv -P'
 alias mv='mv -iv'
 alias df='df -h'
 
@@ -154,11 +159,72 @@ gpush() {
     "${cmd[@]}"
 }
 
+# -----------------------------------------------------------------------------
+# Automação SonarQube Local
+# -----------------------------------------------------------------------------
+export SONAR_TOKEN="sqp_CODIGO_SONAR_QUBE"
+
+sonar-scan() {
+    if [ ! -f sonar-project.properties ]; then
+        echo "❌ Erro: sonar-project.properties não encontrado no diretório atual."
+        return 1
+    fi
+
+    local current_token="${1:-$SONAR_TOKEN}"
+    if [ -z "$current_token" ]; then
+        echo "❌ Erro: SONAR_TOKEN não definido."
+        return 1
+    fi
+
+    echo "🚀 Iniciando análise SonarQube completa (via Docker)..."
+
+    docker run --rm \
+        -e SONAR_TOKEN="$current_token" \
+        -v "$(pwd):/usr/src" \
+        pbsoft/sonar-scanner-cli:latest
+}
+
+sonar-delta() {
+    if [ ! -f sonar-project.properties ]; then
+        echo "❌ Erro: sonar-project.properties não encontrado no diretório atual."
+        return 1
+    fi
+
+    local current_token="${1:-$SONAR_TOKEN}"
+    if [ -z "$current_token" ]; then
+        echo "❌ Erro: SONAR_TOKEN não definido."
+        return 1
+    fi
+
+    echo "🔄 Detectando arquivos novos ou modificados em relação à master..."
+
+    local all_sources
+    all_sources=$( { git diff --name-only master 2>/dev/null; git ls-files --others --exclude-standard; } | \
+        grep -E '\.(php|js|ts|css|html)$' | paste -sd "," - )
+
+    if [ -z "$all_sources" ]; then
+        echo "✨ Nenhum arquivo de código modificado ou novo detectado em relação à master."
+        return 0
+    fi
+
+    echo "🔍 Arquivos selecionados para o Delta-Scan:"
+    echo "$all_sources" | tr ',' '\n' | sed 's/^/  - /'
+    echo "--------------------------------------------------"
+
+    docker run --rm \
+        -e SONAR_TOKEN="$current_token" \
+        -v "$(pwd):/usr/src" \
+        pbsoft/sonar-scanner-cli:latest \
+        sonar-scanner \
+        -Dsonar.projectKey="main_lotep_delta" \
+        -Dsonar.projectName="Lotep [Delta Local]" \
+        -Dsonar.sources="$all_sources"
+}
+
 # --- 6. Integração do FZF ---
 export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 
 if (( $+commands[bat] )); then
-    # Usa o bat para colorir o preview nativo do FZF (ex: ao apertar Ctrl+T)
     export FZF_CTRL_T_OPTS="--preview 'bat --color=always --style=numbers --line-range=:500 {}'"
 fi
 
@@ -191,7 +257,7 @@ ZSH_HIGHLIGHT_STYLES[alias]='fg=cyan,bold'
 ZSH_HIGHLIGHT_STYLES[command]='fg=green,bold'
 ZSH_HIGHLIGHT_STYLES[error]='fg=red,bold,underline'
 
-# Runtimes via Rust
+# Runtimes & Initializations
 if [ -d "$FNM_PATH" ]; then
   eval "$(fnm env --use-on-cd --shell zsh)"
 fi

@@ -66,6 +66,7 @@
 [diff]
     algorithm = histogram
     renames = true
+    copies = true
 
 [maintenance]
     auto = true
